@@ -11,7 +11,7 @@ permissions:
 
 jobs:
 
-  "2022.2":
+  unity-2022-2:
     name: "2022.2"
     runs-on: ubuntu-latest
 
@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          mkdir -p release/2022.2
+          mkdir -p "release/2022.2"
           cp "Builds/TvAnti2022.2.unitypackage" \
              "release/2022.2/TvAnti2022.2.unitypackage"
 
@@ -45,7 +45,7 @@ jobs:
           path: release/2022.2
 
 
-  "2023.3":
+  unity-2023-3:
     name: "2023.3"
     runs-on: ubuntu-latest
 
@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          mkdir -p release/2023.3
+          mkdir -p "release/2023.3"
           cp "Builds/TvAnti2023.3.unitypackage" \
              "release/2023.3/TvAnti2023.3.unitypackage"
 
@@ -79,7 +79,7 @@ jobs:
           path: release/2023.3
 
 
-  "6 LTS":
+  unity-6-lts:
     name: "6 LTS"
     runs-on: ubuntu-latest
 
@@ -113,7 +113,7 @@ jobs:
           path: "release/6 LTS"
 
 
-  "6.2 LTS":
+  unity-6-2-lts:
     name: "6.2 LTS"
     runs-on: ubuntu-latest
 
@@ -147,13 +147,13 @@ jobs:
           path: "release/6.2 LTS"
 
 
-  package:
-    name: Package All TvAnti Versions
+  package-all:
+    name: Package All Versions
     needs:
-      - "2022.2"
-      - "2023.3"
-      - "6 LTS"
-      - "6.2 LTS"
+      - unity-2022-2
+      - unity-2023-3
+      - unity-6-lts
+      - unity-6-2-lts
 
     runs-on: ubuntu-latest
 
@@ -162,13 +162,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-2022.2
-          path: release/2022.2
+          path: "release/2022.2"
 
       - name: Download 2023.3
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-2023.3
-          path: release/2023.3
+          path: "release/2023.3"
 
       - name: Download 6 LTS
         uses: actions/download-artifact@v4
@@ -186,8 +186,13 @@ jobs:
         shell: bash
         run: |
           set -e
-          mkdir -p final
-          cp -R release final/TvAnti
+
+          mkdir -p final/TvAnti
+
+          cp -R "release/2022.2" "final/TvAnti/"
+          cp -R "release/2023.3" "final/TvAnti/"
+          cp -R "release/6 LTS" "final/TvAnti/"
+          cp -R "release/6.2 LTS" "final/TvAnti/"
 
           cd final
           zip -qr ../TvAnti-all.zip TvAnti
