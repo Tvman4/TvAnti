@@ -50,7 +50,7 @@ namespace TvAnti
 
             float score = GetScore(playerId);
 
-            score += Mathf.Clamp01(violation.Confidence) * 25f;
+            score += Mathf.Clamp01(violation.Severity) * 25f;
 
             scores[playerId] = score;
 

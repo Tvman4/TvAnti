@@ -1,6 +1,6 @@
 namespace TvAnti {
  public enum ViolationType {
-  None,BlockedLibrary,LibraryHashMatch,UnexpectedNativeModule,UnexpectedAssembly,
+  None,BlockedLibrary,LibraryHashMatch,LibraryHashMismatch,UnexpectedNativeModule,UnexpectedAssembly,
   Speed,Acceleration,Teleport,VerticalVelocity,HeightDelta,RotationRate,SampleGap,
   ClockDrift,DuplicateSequence,InvalidNumber,OutOfBounds,ImpossibleVelocity,
   InputRate,PacketBurst,RemoteStateDivergence,LocalStateDivergence,CorrelatedAnomaly

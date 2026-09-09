@@ -28,9 +28,21 @@ namespace TvAnti
         public float scoreDecayPerSecond = 2.5f;
         public float violationCooldown = 0.35f;
         public float restrictionScore = 100f;
+        public float kickScore = 100f;
+        public float reportScore = 75f;
+        public float sampleInterval = 0.08f;
+
+        [Header("Integrity")]
+        public bool scanManagedAssemblies = true;
+        public bool scanNativeModules = true;
+        public bool scanSo = true;
 
         [Header("Gorilla Locomotion")]
         public bool preserveGorillaLocomotion = true;
+
+        [Header("Endpoints")]
+        public string validationEndpoint = "";
+        public string photonAppId = "";
 
         [Header("Blocked Native Libraries")]
         [Tooltip("Exact native-library basenames only.")]

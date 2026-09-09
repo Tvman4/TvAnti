@@ -6,6 +6,19 @@ using UnityEngine.Networking;
 
 namespace TvAnti
 {
+    [Serializable]
+    public sealed class TvAntiPlayerReport
+    {
+        public string titleId;
+        public string targetPlayerId;
+        public string targetPlayerName;
+        public string reportReason;
+        public string reporterPlayerId;
+        public string reporterPlayerName;
+        public string roomCode;
+        public long timestampUnix;
+    }
+
     public sealed class TvAntiReporter : MonoBehaviour
     {
         public static TvAntiReporter Instance { get; private set; }
