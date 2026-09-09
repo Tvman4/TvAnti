@@ -1,0 +1,8 @@
+{
+  "name": "com.tvmods.tvanti",
+  "version": "1.0.0",
+  "displayName": "TvAnti",
+  "description": "Defensive VR anti-cheat framework for Unity fangames.",
+  "unity": "2021.3",
+  "author": { "name": "TvAnti" }
+}
