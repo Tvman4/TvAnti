@@ -19,30 +19,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build TvAnti2022.2.unitypackage
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          unityVersion: 2022.2.21f1
-          targetPlatform: Android
-          buildMethod: TvAnti.Editor.TvAntiPackageBuilder.Build2022_2
-
-      - name: Prepare folder
+      - name: Create UnityPackage
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
+
           mkdir -p "release/2022.2"
-          cp "Builds/TvAnti2022.2.unitypackage" \
-             "release/2022.2/TvAnti2022.2.unitypackage"
+
+          tar -czf \
+            "release/2022.2/TvAnti2022.2.unitypackage" \
+            package/
 
       - name: Upload 2022.2
         uses: actions/upload-artifact@v4
         with:
           name: TvAnti-2022.2
-          path: release/2022.2
+          path: "release/2022.2/TvAnti2022.2.unitypackage"
 
 
   unity-2023-3:
@@ -53,30 +45,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build TvAnti2023.3.unitypackage
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          unityVersion: 2023.3.0f1
-          targetPlatform: Android
-          buildMethod: TvAnti.Editor.TvAntiPackageBuilder.Build2023_3
-
-      - name: Prepare folder
+      - name: Create UnityPackage
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
+
           mkdir -p "release/2023.3"
-          cp "Builds/TvAnti2023.3.unitypackage" \
-             "release/2023.3/TvAnti2023.3.unitypackage"
+
+          tar -czf \
+            "release/2023.3/TvAnti2023.3.unitypackage" \
+            package/
 
       - name: Upload 2023.3
         uses: actions/upload-artifact@v4
         with:
           name: TvAnti-2023.3
-          path: release/2023.3
+          path: "release/2023.3/TvAnti2023.3.unitypackage"
 
 
   unity-6-lts:
@@ -87,30 +71,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build TvAnti6 LTS.unitypackage
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          unityVersion: 6000.0.58f2
-          targetPlatform: Android
-          buildMethod: TvAnti.Editor.TvAntiPackageBuilder.Build6_LTS
-
-      - name: Prepare folder
+      - name: Create UnityPackage
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
+
           mkdir -p "release/6 LTS"
-          cp "Builds/TvAnti6 LTS.unitypackage" \
-             "release/6 LTS/TvAnti6 LTS.unitypackage"
+
+          tar -czf \
+            "release/6 LTS/TvAnti6 LTS.unitypackage" \
+            package/
 
       - name: Upload 6 LTS
         uses: actions/upload-artifact@v4
         with:
           name: TvAnti-6-LTS
-          path: "release/6 LTS"
+          path: "release/6 LTS/TvAnti6 LTS.unitypackage"
 
 
   unity-6-2-lts:
@@ -121,30 +97,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build TvAnti6.2 LTS.unitypackage
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          unityVersion: 6000.2.0f1
-          targetPlatform: Android
-          buildMethod: TvAnti.Editor.TvAntiPackageBuilder.Build6_2_LTS
-
-      - name: Prepare folder
+      - name: Create UnityPackage
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
+
           mkdir -p "release/6.2 LTS"
-          cp "Builds/TvAnti6.2 LTS.unitypackage" \
-             "release/6.2 LTS/TvAnti6.2 LTS.unitypackage"
+
+          tar -czf \
+            "release/6.2 LTS/TvAnti6.2 LTS.unitypackage" \
+            package/
 
       - name: Upload 6.2 LTS
         uses: actions/upload-artifact@v4
         with:
           name: TvAnti-6.2-LTS
-          path: "release/6.2 LTS"
+          path: "release/6.2 LTS/TvAnti6.2 LTS.unitypackage"
 
 
   package-all:
@@ -162,42 +130,34 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-2022.2
-          path: "release/2022.2"
+          path: "TvAnti/2022.2"
 
       - name: Download 2023.3
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-2023.3
-          path: "release/2023.3"
+          path: "TvAnti/2023.3"
 
       - name: Download 6 LTS
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-6-LTS
-          path: "release/6 LTS"
+          path: "TvAnti/6 LTS"
 
       - name: Download 6.2 LTS
         uses: actions/download-artifact@v4
         with:
           name: TvAnti-6.2-LTS
-          path: "release/6.2 LTS"
+          path: "TvAnti/6.2 LTS"
 
-      - name: Create TvAnti-all.zip
+      - name: Create final ZIP
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
 
-          mkdir -p final/TvAnti
+          zip -qr TvAnti-all.zip TvAnti
 
-          cp -R "release/2022.2" "final/TvAnti/"
-          cp -R "release/2023.3" "final/TvAnti/"
-          cp -R "release/6 LTS" "final/TvAnti/"
-          cp -R "release/6.2 LTS" "final/TvAnti/"
-
-          cd final
-          zip -qr ../TvAnti-all.zip TvAnti
-
-      - name: Upload TvAnti-all.zip
+      - name: Upload final ZIP
         uses: actions/upload-artifact@v4
         with:
           name: TvAnti-all
