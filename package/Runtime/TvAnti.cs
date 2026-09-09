@@ -28,17 +28,21 @@ namespace TvAnti
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            if (config == null)
+                config = ScriptableObject.CreateInstance<TvAntiConfig>();
+
             if (reporter == null)
                 reporter = GetComponent<TvAntiReporter>();
+            if (reporter == null)
+                reporter = gameObject.AddComponent<TvAntiReporter>();
 
-            if (reporter != null)
-                reporter.Configure(config);
+            if (GetComponent<TvAntiRuntime>() == null)
+                gameObject.AddComponent<TvAntiRuntime>();
+            if (GetComponent<TvAntiExtendedGuardRunner>() == null)
+                gameObject.AddComponent<TvAntiExtendedGuardRunner>();
 
-            if (config != null)
-                banManager = new TvAntiBanManager(
-                    config,
-                    reporter
-                );
+            reporter.Configure(config);
+            banManager = new TvAntiBanManager(config, reporter);
         }
 
         private void Update()
