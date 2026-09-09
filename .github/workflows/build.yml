@@ -1,33 +1,96 @@
 name: Build TvAnti
+
 on:
   workflow_dispatch:
   push:
-    tags: ["v*"]
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
 jobs:
   package:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - package_name: TvAnti22.x
+            unity_version: "2022.3"
+          - package_name: TvAnti6.2
+            unity_version: "6000.2"
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Build versioned Unity packages
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create package
+        env:
+          PACKAGE_NAME: ${{ matrix.package_name }}
+          UNITY_VERSION: ${{ matrix.unity_version }}
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf dist
-          mkdir -p dist
-          for spec in 'TvAnti22.x|2022.3' 'TvAnti6.2|6000.2'; do
-            IFS='|' read -r name unity <<< "$spec"
-            mkdir -p "dist/$name"
-            cp -R package/. "dist/$name/"
-            python3 - "$name" "$unity" <<'PY'
-import json,sys
-name,unity=sys.argv[1:]
-p=f"dist/{name}/package.json"
-d=json.load(open(p)); d["displayName"]=name; d["unity"]=unity
-open(p,"w").write(json.dumps(d,indent=2)+"\n")
-PY
-            (cd dist && zip -qr "${name}.zip" "$name")
-          done
-      - uses: actions/upload-artifact@v4
+
+          mkdir -p "dist/$PACKAGE_NAME"
+          cp -R package/. "dist/$PACKAGE_NAME/"
+
+          python3 - "$PACKAGE_NAME" "$UNITY_VERSION" <<'PY'
+          import json
+          import sys
+
+          package_name = sys.argv[1]
+          unity_version = sys.argv[2]
+
+          path = f"dist/{package_name}/package.json"
+
+          with open(path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          data["displayName"] = package_name
+          data["unity"] = unity_version
+
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2)
+              f.write("\n")
+          PY
+
+          mkdir -p dist/zips
+
+          cd dist
+          zip -qr "zips/${PACKAGE_NAME}.zip" "$PACKAGE_NAME"
+
+      - name: Upload Unity package
+        uses: actions/upload-artifact@v4
         with:
-          name: TvAnti
-          path: dist/*.zip
+          name: ${{ matrix.package_name }}
+          path: dist/zips/${{ matrix.package_name }}.zip
+
+  combined:
+    needs: package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: combined
+
+      - name: Build combined ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p release
+
+          find combined -type f -name '*.zip' -exec cp {} release/ \;
+
+          cd release
+          zip -qr ../TvAnti-all.zip .
+
+      - name: Upload combined ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: TvAnti-all
+          path: TvAnti-all.zip
